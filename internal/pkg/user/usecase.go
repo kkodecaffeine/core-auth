@@ -11,7 +11,6 @@ type usecase struct {
 
 func (u *usecase) GetUserBy(ID *int64) (User, error) {
 	return User{}, nil
-	// return u.repo.FindOne(ID)
 }
 
 // NewUseCase returns new UseCase implementation

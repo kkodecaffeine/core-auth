@@ -1,33 +1,28 @@
 package apis
 
 import (
-	"core-auth/internal/app/apis/usersvc"
-
-	"core-auth/internal/pkg/user"
-	userRepo "core-auth/internal/pkg/user/persistence"
-
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
+	// "github.com/jinzhu/gorm"
 )
 
 type App interface {
-	Init() error
+	Init()
 	RegisterRoute(driver *gin.Engine)
 	Clean() error
 }
 
 type apiApp struct {
-	db *gorm.DB
+	keycloak *keycloak
+	// db *gorm.DB
 }
 
-func (ag *apiApp) Init() error {
-	ag.db = getDatabase()
-	return nil
+func (ag *apiApp) Init() {
+	ag.keycloak = getKeycloak()
 }
 
 func (ag *apiApp) RegisterRoute(driver *gin.Engine) {
-	nu := user.NewUseCase(userRepo.New(ag.db))
-	usersvc.NewController(driver, nu)
+	// nu := user.NewUseCase(userRepo.New(ag.db))
+	NewController(driver, ag.keycloak)
 }
 
 func (ag *apiApp) Clean() error {
@@ -44,6 +39,6 @@ func CreateAPIApp() {
 	agApp.Init()
 	agApp.RegisterRoute(r)
 
-	r.Run(":8080")
+	r.Run(":3000")
 	agApp.Clean()
 }
